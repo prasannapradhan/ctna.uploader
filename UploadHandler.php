@@ -1142,6 +1142,7 @@ class UploadHandler
                         FILE_APPEND
                     );
                 } else {
+                	error_log("Moving file to [$file_path]");
                     move_uploaded_file($uploaded_file, $file_path);
                 }
             } else {
