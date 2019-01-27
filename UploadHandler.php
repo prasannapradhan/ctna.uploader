@@ -1126,7 +1126,7 @@ class UploadHandler
         $file->type = $type;
         if ($this->validate($uploaded_file, $file, $error, $index)) {
             $this->handle_form_data($file, $index);
-            $upload_dir = $this->get_upload_path();
+            $upload_dir = $this->get_upload_path()."/".$oid."/";
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, $this->options['mkdir_mode'], true);
             }
