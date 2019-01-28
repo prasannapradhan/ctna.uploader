@@ -31,7 +31,6 @@ class UploadHandler {
     protected $image_objects = array();
 
     public function __construct($options = null, $initialize = true, $error_messages = null) {
-		error_log("Constructor was called...");
     	$this->response = array();
         $this->options = array(
             'script_url' => $this->get_full_url().'/'.$this->basename($this->get_server_var('SCRIPT_NAME')),
@@ -100,7 +99,6 @@ class UploadHandler {
     }
 
     protected function initialize() {
-    	error_log("Initialize was called");
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
             case 'HEAD':
@@ -148,7 +146,6 @@ class UploadHandler {
     }
 
     protected function get_upload_path($file_name = null, $version = null) {
-    	error_log("Upload path was called");
         $file_name = $file_name ? $file_name : '';
         if (empty($version)) {
             $version_path = '';
@@ -290,7 +287,6 @@ class UploadHandler {
     }
 
     protected function validate($uploaded_file, $file, $error, $index) {
-    	error_log("Validate was called");
         if ($error) {
             $file->error = $this->get_error_message($error);
             return false;
@@ -1011,20 +1007,17 @@ class UploadHandler {
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
             $index = null, $content_range = null) {
-		error_log("Handle file upload was called");
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error, $index, $content_range);
         $file->size = $this->fix_integer_overflow((int)$size);
         $file->type = $type;
         if ($this->validate($uploaded_file, $file, $error, $index)) {
             $this->handle_form_data($file, $index);
-            error_log("Order ID [".$this->options['oid']."]");
             if(isset($this->options['oid'])){
             	$upload_dir = $this->get_upload_path()."/".$this->options['oid']."/";
             }else {
             	$upload_dir = $this->get_upload_path();
             }
-            error_log("Upload directory [$upload_dir]");
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, $this->options['mkdir_mode'], true);
             }
@@ -1040,7 +1033,6 @@ class UploadHandler {
                         FILE_APPEND
                     );
                 } else {
-                	error_log("Moving file to [$file_path]");
                     move_uploaded_file($uploaded_file, $file_path);
                 }
             } else {
@@ -1352,5 +1344,10 @@ class UploadHandler {
     protected function basename($filepath, $suffix = null) {
         $splited = preg_split('/\//', rtrim ($filepath, '/ '));
         return substr(basename('X'.$splited[count($splited)-1], $suffix), 1);
+    }
+    
+    public function setOptionsAttribute($pname, $pvalue){
+    	error_log("Options set attribute was called with [$pname] and [$pvalue]");
+    	$this->options[$pname] = $pvalue;
     }
 }

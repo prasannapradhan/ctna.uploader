@@ -4,6 +4,6 @@ require('UploadHandler.php');
 $upload_handler = new UploadHandler();
 if(isset($_GET['oid'])){
 	$oid = $_GET['oid'];
-	$upload_handler->options['oid'] = $oid;
+	$upload_handler->setOptionsAttribute('oid', $oid);
 }
 
