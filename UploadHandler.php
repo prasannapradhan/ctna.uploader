@@ -30,7 +30,7 @@ class UploadHandler {
 
     protected $image_objects = array();
 
-    public function __construct($options = null, $initialize = true, $error_messages = null) {
+    public function __construct($options = null, $error_messages = null) {
     	$this->response = array();
         $this->options = array(
             'script_url' => $this->get_full_url().'/'.$this->basename($this->get_server_var('SCRIPT_NAME')),
@@ -93,12 +93,9 @@ class UploadHandler {
         if ($error_messages) {
             $this->error_messages = $error_messages + $this->error_messages;
         }
-        if ($initialize) {
-            $this->initialize();
-        }
     }
 
-    protected function initialize() {
+    public function initialize() {
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
             case 'HEAD':
