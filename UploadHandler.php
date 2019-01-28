@@ -1018,6 +1018,7 @@ class UploadHandler {
         $file->type = $type;
         if ($this->validate($uploaded_file, $file, $error, $index)) {
             $this->handle_form_data($file, $index);
+            error_log("Order ID [".$this->options['oid']."]");
             if(isset($this->options['oid'])){
             	$upload_dir = $this->get_upload_path()."/".$this->options['oid']."/";
             }else {
