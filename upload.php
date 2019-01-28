@@ -6,4 +6,5 @@ if(isset($_GET['oid'])){
 	$oid = $_GET['oid'];
 	$upload_handler->setOptionsAttribute('oid', $oid);
 }
-$upload_handler->initialize();
+$response = $upload_handler->process();
+echo $response;

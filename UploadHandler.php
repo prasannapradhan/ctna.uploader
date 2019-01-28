@@ -95,30 +95,32 @@ class UploadHandler {
         }
     }
 
-    public function initialize() {
+    public function process() {
 		if(isset($this->options['oid'])){
 			$this->options['upload_dir'] = '/var/www/html/resources/apps/ctna.uploader/files/'.$this->options['oid'].'/';
 			$this->options['upload_url'] = 'http://ftp.pearnode.com/resources/apps/ctna.uploader/files/'.$this->options['oid'].'/';
 		}
+		$response = '';
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
             case 'HEAD':
-                $this->head();
+                $response = $this->head();
                 break;
             case 'GET':
-                $this->get($this->options['print_response']);
+                $response = $this->get($this->options['print_response']);
                 break;
             case 'PATCH':
             case 'PUT':
             case 'POST':
-                $this->post($this->options['print_response']);
+                $response = $this->post($this->options['print_response']);
                 break;
             case 'DELETE':
-                $this->delete($this->options['print_response']);
+                $response = $this->delete($this->options['print_response']);
                 break;
             default:
-                $this->header('HTTP/1.1 405 Method Not Allowed');
+                $response = $this->header('HTTP/1.1 405 Method Not Allowed');
         }
+        return $response;
     }
 
     protected function get_full_url() {
