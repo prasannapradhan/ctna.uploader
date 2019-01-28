@@ -31,7 +31,8 @@ class UploadHandler {
     protected $image_objects = array();
 
     public function __construct($options = null, $initialize = true, $error_messages = null) {
-        $this->response = array();
+		error_log("Constructor was called...");
+    	$this->response = array();
         $this->options = array(
             'script_url' => $this->get_full_url().'/'.$this->basename($this->get_server_var('SCRIPT_NAME')),
             'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/',
@@ -44,20 +45,11 @@ class UploadHandler {
             'access_control_allow_origin' => '*',
             'access_control_allow_credentials' => false,
             'access_control_allow_methods' => array(
-                'OPTIONS',
-                'HEAD',
-                'GET',
-                'POST',
-                'PUT',
-                'PATCH',
-                'DELETE'
+                'OPTIONS','HEAD', 'GET', 'POST', 'PUT', 'PATCH','DELETE'
             ),
             'access_control_allow_headers' => array(
-                'Content-Type',
-                'Content-Range',
-                'Content-Disposition'
+                'Content-Type', 'Content-Range','Content-Disposition'
             ),
-            // By default, allow redirects to the referer protocol+host:
             'redirect_allow_target' => '/^'.preg_quote(
               parse_url($this->get_server_var('HTTP_REFERER'), PHP_URL_SCHEME)
                 .'://'
@@ -83,9 +75,7 @@ class UploadHandler {
             'convert_bin' => 'convert',
             'identify_bin' => 'identify',
             'image_versions' => array(
-                '' => array(
-                    'auto_orient' => true
-                ),
+                '' => array('auto_orient' => true),
                 'thumbnail' => array(
                     // 'auto_orient' => true,
                     // 'crop' => true,
@@ -110,6 +100,7 @@ class UploadHandler {
     }
 
     protected function initialize() {
+    	error_log("Initialize was called");
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
             case 'HEAD':
@@ -157,6 +148,7 @@ class UploadHandler {
     }
 
     protected function get_upload_path($file_name = null, $version = null) {
+    	error_log("Upload path was called");
         $file_name = $file_name ? $file_name : '';
         if (empty($version)) {
             $version_path = '';
@@ -212,8 +204,6 @@ class UploadHandler {
         }
     }
 
-    // Fix for overflowing signed 32 bit integers,
-    // works for sizes up to 2^32-1 bytes (4 GiB - 1):
     protected function fix_integer_overflow($size) {
         if ($size < 0) {
             $size += 2.0 * (PHP_INT_MAX + 1);
@@ -300,6 +290,7 @@ class UploadHandler {
     }
 
     protected function validate($uploaded_file, $file, $error, $index) {
+    	error_log("Validate was called");
         if ($error) {
             $file->error = $this->get_error_message($error);
             return false;
@@ -347,8 +338,6 @@ class UploadHandler {
         if (($max_width || $max_height || $min_width || $min_height)
             && $this->is_valid_image_file($uploaded_file)) {
             list($img_width, $img_height) = $this->get_image_size($uploaded_file);
-            // If we are auto rotating the image by default, do the checks on
-            // the correct orientation
             if (
                 @$this->options['image_versions']['']['auto_orient'] &&
                 function_exists('exif_read_data') &&
@@ -449,12 +438,7 @@ class UploadHandler {
 
     protected function trim_file_name($file_path, $name, $size, $type, $error,
             $index, $content_range) {
-        // Remove path information and dots around the filename, to prevent uploading
-        // into different directories or replacing hidden system files.
-        // Also remove control characters and spaces (\x00..\x20) around the filename:
         $name = trim($this->basename(stripslashes($name)), ".\x00..\x20");
-        // Replace dots in filenames to avoid security issues with servers
-        // that interpret multiple file extensions, e.g. "example.php.png":
         $replacement = $this->options['replace_dots_in_filenames'];
         if (!empty($replacement)) {
             $parts = explode('.', $name);
@@ -463,7 +447,6 @@ class UploadHandler {
                 $name = implode($replacement, $parts).'.'.$ext;
             }
         }
-        // Use a timestamp for empty filenames:
         if (!$name) {
             $name = str_replace('.', '-', microtime(true));
         }
@@ -812,7 +795,6 @@ class UploadHandler {
         $new_width = $max_width = $img_width = $image->getImageWidth();
         $new_height = $max_height = $img_height = $image->getImageHeight(); 
 		  
-        // use isset(). User might be setting max_width = 0 (auto in regular resizing). Value 0 would be considered empty when you use empty()
         if (isset($options['max_width'])) {
             $image_resize = true; 
             $new_width = $max_width = $options['max_width']; 
@@ -1029,6 +1011,7 @@ class UploadHandler {
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
             $index = null, $content_range = null) {
+		error_log("Handle file upload was called");
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error, $index, $content_range);
         $file->size = $this->fix_integer_overflow((int)$size);
