@@ -96,6 +96,10 @@ class UploadHandler {
     }
 
     public function initialize() {
+		if(isset($this->options['oid'])){
+			$this->options['upload_dir'] = '/var/www/html/resources/apps/ctna.uploader/files/'.$this->options['oid'].'/';
+			$this->options['upload_url'] = 'http://ftp.pearnode.com/resources/apps/ctna.uploader/files/'.$this->options['oid'].'/';
+		}
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
             case 'HEAD':
@@ -1010,11 +1014,7 @@ class UploadHandler {
         $file->type = $type;
         if ($this->validate($uploaded_file, $file, $error, $index)) {
             $this->handle_form_data($file, $index);
-            if(isset($this->options['oid'])){
-            	$upload_dir = $this->get_upload_path()."/".$this->options['oid']."/";
-            }else {
-            	$upload_dir = $this->get_upload_path();
-            }
+            $upload_dir = $this->get_upload_path();
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, $this->options['mkdir_mode'], true);
             }
