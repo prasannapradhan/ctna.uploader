@@ -1217,8 +1217,7 @@ class UploadHandler {
                 $files = isset($content[$this->options['param_name']]) ?
                     $content[$this->options['param_name']] : null;
                 if ($files && is_array($files) && is_object($files[0]) && $files[0]->size) {
-                    $this->header('Range: 0-'.(
-                        $this->fix_integer_overflow((int)$files[0]->size) - 1
+                    $this->header('Range: 0-'.($this->fix_integer_overflow((int)$files[0]->size) - 1
                     ));
                 }
             }
@@ -1337,6 +1336,7 @@ class UploadHandler {
             }
             $response[$file_name] = $success;
         }
+        $response[$this->options['param_name']] = $file_names;
         return $this->generate_response($response, $print_response);
     }
 
