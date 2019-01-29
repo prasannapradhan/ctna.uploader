@@ -1336,7 +1336,6 @@ class UploadHandler {
             }
             $response[$file_name] = $success;
         }
-        $response[$this->options['param_name']] = $file_names;
         return $this->generate_response($response, $print_response);
     }
 
