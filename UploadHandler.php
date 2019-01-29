@@ -1313,6 +1313,7 @@ class UploadHandler {
             }
         }
         $response = array($this->options['param_name'] => $files);
+        error_log(print_r($files, true));
         return $this->generate_response($response, $print_response);
     }
 
