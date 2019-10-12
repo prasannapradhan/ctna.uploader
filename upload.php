@@ -3,11 +3,11 @@
 	$fname = "upic".time().".jpg";
 	$target_file = $target_dir. "/".$fname;
 	
-	error_log(json_encode($_FILES));
-	error_log(json_encode($_POST));
+	$tmp_file = $_FILES['upfile']['tmp_name'];
+	error_log(file_get_contents($tmp_file));
 	
 	$resp = array();
-	if(move_uploaded_file($_FILES['upfile']['tmp_name'], $target_file)) {
+	if(move_uploaded_file($tmp_file, $target_file)) {
 		$resp['status'] = 'SUCCESS';
 		$resp['fname'] = $fname;
 		echo json_encode($resp);
