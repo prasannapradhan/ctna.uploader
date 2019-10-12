@@ -1,9 +1,15 @@
 <?php
-error_reporting(E_ALL | E_STRICT);
-require('UploadHandler.php');
-$upload_handler = new UploadHandler();
-if(isset($_GET['oid'])){
-	$oid = $_GET['oid'];
-	$upload_handler->setOptionsAttribute('oid', $oid);
-}
-$response = $upload_handler->process();
+	$target_dir = "/var/www/html/resources/apps/common/uploads/";
+	$fname = "upic".time().".jpg";
+	$target_file = $target_dir. "/".$fname;
+	
+	$resp = array();
+	if(move_uploaded_file($_FILES['upic_uploader']['tmp_name'], $target_path)) {
+		$resp['status'] = 'SUCCESS';
+		$resp['fname'] = $fname;
+		echo json_encode($resp);
+	} else{
+		$resp['status'] = 'FAILURE';
+		echo json_encode($resp);
+	}
+?>
