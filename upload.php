@@ -1,5 +1,5 @@
 <?php
-	$target_dir = "/var/www/html/resources/apps/common/uploads/";
+	$target_dir = "/var/www/html/resources/uploader";
 	$fname = "upic".time().".jpg";
 	$target_file = $target_dir. "/".$fname;
 	
