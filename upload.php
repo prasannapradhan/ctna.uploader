@@ -2,6 +2,9 @@
 	$target_dir = "/var/www/html/resources/uploader";
 	$fname = "upic".time().".jpg";
 	$target_file = $target_dir. "/".$fname;
+	
+	$tmp_file = $_FILES['upfile']['tmp_name'];
+	
 	$resp = array();
 	if(move_uploaded_file($tmp_file, $target_file)) {
 		$resp['status'] = 'SUCCESS';
